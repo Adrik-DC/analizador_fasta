@@ -134,5 +134,32 @@ def calcular_estadisticas(gc_por_secuencia):
 
 
 estadisticas = calcular_estadisticas(gc_por_secuencia)
-for name, seq, tamaño, gc in estadisticas:
+
+# ------------------------------------------
+# Contar tamaño de cada secuencia
+# ------------------------------------------
+# ------------------------------------------
+# Responsabilidad: Contar el tamaño de cada secuencia
+# Entrada: gc_por_secuencia (lista de tuplas con nombre, secuencia y porcentaje GC)
+# Salida: tuplas (nombre, seq, tamaño, porcentaje GC)
+# ------------------------------------------
+
+
+def pasa_filtros(estadisticas, args):
+    resultados = []
+    for name, seq, tamaño, gc in estadisticas:
+        if args.min_length and tamaño < args.min_length:
+            continue
+        if args.max_length and tamaño > args.max_length:
+            continue
+        if args.min_GC and gc < args.min_GC:
+            continue
+        if args.max_GC and gc > args.max_GC:
+            continue
+        resultados.append((name, seq, tamaño, gc))
+    return resultados
+
+
+estadisticas_filtradas = pasa_filtros(estadisticas, args)
+for name, seq, tamaño, gc in estadisticas_filtradas:
     print(f"{name}, {seq}: {tamaño}, {gc:.2f}% GC")
