@@ -12,6 +12,12 @@ import argparse
 
 
 def parsear_argumentos():
+    """Parsea los argumentos de la línea de comandos.
+
+    Returns:
+        argparse.Namespace: Argumentos parseados con atributos
+            `input`, `output`, `min_length`, `max_length`, `min_GC` y `max_GC`.
+    """
 
     parser = argparse.ArgumentParser(
         description="Calcula la composición GC de las secuencias en un archivo fasta"
@@ -63,6 +69,17 @@ import os
 
 
 def leer_fasta(file_name):
+    """Lee secuencias FASTA desde un archivo.
+
+    Args:
+        file_name (str): Ruta al archivo FASTA de entrada.
+
+    Returns:
+        list[tuple[str, str]]: Lista de tuplas `(nombre, secuencia)`.
+
+    Raises:
+        SystemExit: Si el archivo no existe.
+    """
     interactions = []
     if not os.path.exists(file_name):
         print("Error: archivo no encontrado")
@@ -98,6 +115,14 @@ def leer_fasta(file_name):
 
 
 def calcular_gc(secuencias):
+    """Calcula el porcentaje de GC para cada secuencia.
+
+    Args:
+        secuencias (list[tuple[str, str]]): Lista de tuplas `(nombre, secuencia)`.
+
+    Returns:
+        list[tuple[str, str, float]]: Lista de tuplas `(nombre, secuencia, porcentaje_gc)`.
+    """
     resultados = []
     for name, seq in secuencias:
         seq = seq.upper()
@@ -119,6 +144,16 @@ def calcular_gc(secuencias):
 
 
 def calcular_estadisticas(gc_por_secuencia):
+    """Calcula la longitud de cada secuencia.
+
+    Args:
+        gc_por_secuencia (list[tuple[str, str, float]]): Lista de tuplas
+            `(nombre, secuencia, porcentaje_gc)`.
+
+    Returns:
+        list[tuple[str, str, int, float]]: Lista de tuplas
+            `(nombre, secuencia, tamaño, porcentaje_gc)`.
+    """
     resultados = []
     for name, seq, gc in gc_por_secuencia:
         tamaño = len(seq)
@@ -137,6 +172,16 @@ def calcular_estadisticas(gc_por_secuencia):
 
 
 def pasa_filtros(estadisticas, args):
+    """Filtra las secuencias según los argumentos de longitud y GC.
+
+    Args:
+        estadisticas (list[tuple[str, str, int, float]]): Lista de tuplas
+            `(nombre, secuencia, tamaño, porcentaje_gc)`.
+        args (argparse.Namespace): Argumentos parseados con filtros.
+
+    Returns:
+        list[tuple[str, str, int, float]]: Secuencias que cumplen los filtros.
+    """
     resultados = []
     for name, seq, tamaño, gc in estadisticas:
         if args.min_length and tamaño < args.min_length:
@@ -162,6 +207,16 @@ def pasa_filtros(estadisticas, args):
 
 
 def escribir_resultados(estadisticas_filtradas, output_file):
+    """Escribe los resultados filtrados en un archivo TSV.
+
+    Args:
+        estadisticas_filtradas (list[tuple[str, str, int, float]]): Lista de tuplas
+            `(nombre, secuencia, tamaño, porcentaje_gc)`.
+        output_file (str): Ruta del archivo de salida.
+
+    Returns:
+        str: Ruta del archivo de salida.
+    """
     with open(output_file, "w") as f:
         f.write("Nombre\tSecuencia\tTamaño\t%GC\n")
         for name, seq, tamaño, gc in estadisticas_filtradas:
