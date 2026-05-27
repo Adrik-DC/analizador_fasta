@@ -58,7 +58,7 @@ file_name = args.input
 # ------------------------------------------
 # ------------------------------------------
 # Responsabilidad: Guardar interacciones del archivo fasta
-# Entrada: input
+# Entrada: file_name
 # Salida: secuencias
 # ------------------------------------------
 
@@ -90,4 +90,49 @@ def leer_fasta(file_name):
     return interactions
 
 
-print(leer_fasta(file_name))
+secuencias = leer_fasta(file_name)
+
+# ------------------------------------------
+# Contar la composición GC de las secuencias
+# ------------------------------------------
+# ------------------------------------------
+# Responsabilidad: Contar la composición GC de cada secuencia
+# Entrada: lista de tuplas (nombre, secuencia)
+# Salida: lista de tuplas (nombre, porcentaje GC)
+# ------------------------------------------
+
+
+def calcular_gc(secuencias):
+    resultados = []
+    for name, seq in secuencias:
+        seq = seq.upper()
+        gc_count = seq.count("G") + seq.count("C")
+        total_count = len(seq)
+        porcentaje_gc = (gc_count / total_count * 100) if total_count else 0
+        resultados.append((name, seq, porcentaje_gc))
+    return resultados
+
+
+gc_por_secuencia = calcular_gc(secuencias)
+
+# ------------------------------------------
+# Contar tamaño de cada secuencia
+# ------------------------------------------
+# ------------------------------------------
+# Responsabilidad: Contar el tamaño de cada secuencia
+# Entrada: gc_por_secuencia (lista de tuplas con nombre, secuencia y porcentaje GC)
+# Salida: tuplas (nombre, seq, tamaño, porcentaje GC)
+# ------------------------------------------
+
+
+def calcular_estadisticas(gc_por_secuencia):
+    resultados = []
+    for name, seq, gc in gc_por_secuencia:
+        tamaño = len(seq)
+        resultados.append((name, seq, tamaño, gc))
+    return resultados
+
+
+estadisticas = calcular_estadisticas(gc_por_secuencia)
+for name, seq, tamaño, gc in estadisticas:
+    print(f"{name}, {seq}: {tamaño}, {gc:.2f}% GC")
