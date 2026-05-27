@@ -34,14 +34,14 @@ def parsear_argumentos():
 
     parser.add_argument(
         "--min-GC",
-        type=int,
+        type=float,
         default=0,
         help="Composición mínima de GC de las secuencias a considerar",
     )
 
     parser.add_argument(
         "--max-GC",
-        type=int,
+        type=float,
         help="Composición máxima de GC de las secuencias a considerar",
     )
 
