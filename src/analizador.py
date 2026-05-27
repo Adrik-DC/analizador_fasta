@@ -50,9 +50,6 @@ def parsear_argumentos():
     return args
 
 
-args = parsear_argumentos()
-file_name = args.input
-
 # ------------------------------------------
 # Leer el archivo fasta de entrada
 # ------------------------------------------
@@ -90,8 +87,6 @@ def leer_fasta(file_name):
     return interactions
 
 
-secuencias = leer_fasta(file_name)
-
 # ------------------------------------------
 # Contar la composición GC de las secuencias
 # ------------------------------------------
@@ -113,8 +108,6 @@ def calcular_gc(secuencias):
     return resultados
 
 
-gc_por_secuencia = calcular_gc(secuencias)
-
 # ------------------------------------------
 # Contar tamaño de cada secuencia
 # ------------------------------------------
@@ -132,8 +125,6 @@ def calcular_estadisticas(gc_por_secuencia):
         resultados.append((name, seq, tamaño, gc))
     return resultados
 
-
-estadisticas = calcular_estadisticas(gc_por_secuencia)
 
 # ------------------------------------------
 # Contar tamaño de cada secuencia
@@ -160,6 +151,35 @@ def pasa_filtros(estadisticas, args):
     return resultados
 
 
-estadisticas_filtradas = pasa_filtros(estadisticas, args)
-for name, seq, tamaño, gc in estadisticas_filtradas:
-    print(f"{name}, {seq}: {tamaño}, {gc:.2f}% GC")
+# ------------------------------------------
+# Mandar a escribir el archivo de salida tsv
+# ------------------------------------------
+# ------------------------------------------
+# Responsabilidad: crear un archivo de salida con las secuencias que cumplen los filtros
+# Entrada: estadisticas_filtradas (lista de tuplas con nombre, secuencia, tamaño y porcentaje GC)
+# Salida: output (archivo tsv con nombre, secuencia, tamaño y porcentaje GC)
+# ------------------------------------------
+
+
+def escribir_resultados(estadisticas_filtradas, output_file):
+    with open(output_file, "w") as f:
+        f.write("Nombre\tSecuencia\tTamaño\t%GC\n")
+        for name, seq, tamaño, gc in estadisticas_filtradas:
+            f.write(f"{name}\t{seq}\t{tamaño}\t{gc:.2f}\n")
+    return output_file
+
+
+def main():
+    args = parsear_argumentos()
+    file_name = args.input
+    secuencias = leer_fasta(file_name)
+    gc_por_secuencia = calcular_gc(secuencias)
+    estadisticas = calcular_estadisticas(gc_por_secuencia)
+    estadisticas_filtradas = pasa_filtros(estadisticas, args)
+    output_file = args.output
+    escribir_resultados(estadisticas_filtradas, output_file)
+    print(f"Resultados escritos en {output_file}")
+
+
+if __name__ == "__main__":
+    main()
