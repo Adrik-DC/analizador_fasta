@@ -55,18 +55,15 @@ uv run python src/analizador.py -i data/ejemplo.fasta -o resultados.tsv --min-le
 **Salida en consola:**
 
 ```
-Leyendo archivo: data/ejemplo.fasta
-  4 secuencias encontradas
-  2 secuencias pasan los filtros
 Resultados escritos en 'resultados.tsv'
 ```
 
 **Archivo `resultados.tsv`:**
 
 ```
-encabezado	longitud	contenido_gc
-seq1 Homo sapiens BRCA1	78	0.4872
-seq3 Homo sapiens TP53	130	0.5538
+encabezado	         Secuencia   longitud	   contenido_gc
+seq1 Homo sapiens    ACGTGT...    BRCA1 78	       0.4872
+seq3 Homo sapiens    ACGTGT...    TP53	130	    0.5538
 ```
 
 ~~~
