@@ -27,3 +27,4 @@ uv.lock
 
 # Resultados generados automáticamente
 *.tsv
+!results/results.tsv
